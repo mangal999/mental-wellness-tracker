@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyMind — Unit Tests</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0F172A;
+      color: #F8FAFC;
+      margin: 0;
+      padding: 24px;
+    }
+    h1 { color: #6366F1; margin-bottom: 6px; }
+    p.subtitle { color: #94A3B8; margin-bottom: 24px; font-size: 0.9rem; }
+    .suite {
+      margin-top: 24px;
+      margin-bottom: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      color: #94A3B8;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-bottom: 1px solid #334155;
+      padding-bottom: 6px;
+    }
+    .test {
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin-bottom: 4px;
+      font-size: 0.9rem;
+      display: flex;
+      flex-direction: column;
+    }
+    .pass { background: rgba(16, 185, 129, 0.1); color: #10B981; }
+    .fail { background: rgba(239, 68, 68, 0.1); color: #EF4444; }
+    .error {
+      display: block;
+      margin-top: 4px;
+      font-size: 0.78rem;
+      color: #F59E0B;
+      font-family: monospace;
+    }
+    .summary {
+      padding: 14px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+    }
+    .summary-pass { background: rgba(16, 185, 129, 0.15); color: #10B981; border: 1px solid #10B981; }
+    .summary-fail { background: rgba(239, 68, 68, 0.15); color: #EF4444; border: 1px solid #EF4444; }
+    a { color: #6366F1; }
+  </style>
+</head>
+<body>
+  <h1>StudyMind — Unit Tests</h1>
+  <p class="subtitle">Automated tests for utility functions, data validation, security sanitization, and streak logic. <a href="../index.html">← Back to app</a></p>
+  <div id="test-results">Running tests...</div>
+  <script src="studymind.test.js"></script>
+</body>
+</html>
