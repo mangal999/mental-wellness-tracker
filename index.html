@@ -1,0 +1,328 @@
+<!-- StudyMind v1.0 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StudyMind — AI Study Companion for Competitive Exams</title>
+  <meta name="description" content="A wise senior study companion powered by Google Gemini AI for NEET, JEE, CUET, CAT, GATE, and UPSC aspirants.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <div id="app">
+
+    <!-- ONBOARDING SCREEN -->
+    <div id="screen-onboarding" class="screen">
+      <header>
+        <h1><span>💡</span> StudyMind</h1>
+      </header>
+
+      <div id="onboarding-container" class="card" style="margin-top: 10px;">
+        <!-- Step 1: Intro -->
+        <div class="onboarding-step active">
+          <h2 style="font-size: 1.4rem; margin-bottom: 12px; font-weight:700;">Meet your smart study senior</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 0.95rem; line-height: 1.6;">
+            StudyMind is NOT a wellness app. It's a direct, practical companion. We map your daily energy, mood, and focus to understand exactly what is holding your prep back.
+          </p>
+          <div style="background: rgba(99, 102, 241, 0.1); border-radius: 8px; padding: 15px; border-left: 4px solid var(--accent-primary); margin-bottom: 20px;">
+            <p style="font-size: 0.9rem; color: var(--text-primary); line-height: 1.5;">
+              "Learn to optimize your mind like a machine. We identify root causes of syllabus block and give you exam-tailored actions."
+            </p>
+          </div>
+        </div>
+
+        <!-- Step 2: Profile setup -->
+        <div class="onboarding-step">
+          <h2 style="font-size: 1.4rem; margin-bottom: 12px; font-weight:700;">Tell us about your prep</h2>
+          
+          <label for="ob-name">First Name</label>
+          <input type="text" id="ob-name" placeholder="E.g., Rohan" required>
+
+          <label for="ob-exam">What Exam are you preparing for?</label>
+          <select id="ob-exam">
+            <option value="NEET">NEET (Medical)</option>
+            <option value="JEE">JEE (Engineering)</option>
+            <option value="CUET">CUET (Aspirants)</option>
+            <option value="CAT">CAT (Management)</option>
+            <option value="GATE">GATE (Engineering PG)</option>
+            <option value="UPSC">UPSC (Civil Services)</option>
+          </select>
+
+          <label for="ob-date">Target Exam Date</label>
+          <input type="date" id="ob-date" required>
+        </div>
+
+        <!-- Step 3: API Key Configuration -->
+        <div class="onboarding-step">
+          <h2 style="font-size: 1.4rem; margin-bottom: 12px; font-weight:700;">Set up Mistral AI</h2>
+          <p style="color: var(--text-secondary); margin-bottom: 20px; font-size: 0.9rem; line-height: 1.5;">
+            To power personalized suggestions and patterns tracking, StudyMind calls Mistral API direct from your browser.
+          </p>
+
+          <label for="ob-key">Mistral API Key</label>
+          <input type="text" id="ob-key" placeholder="Mistral API Key..." required>
+          
+          <a href="https://console.mistral.ai/" target="_blank" style="color: var(--accent-primary); font-size: 0.85rem; text-decoration: none; display: inline-block; margin-bottom: 20px; font-weight:500;">
+            Get your API key →
+          </a>
+        </div>
+
+        <!-- Buttons navigation -->
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+          <button id="ob-prev" class="btn btn-secondary" style="flex: 1; display: none; margin-top:0;">Back</button>
+          <button id="ob-next" class="btn btn-primary" style="flex: 2;">Next</button>
+        </div>
+
+        <!-- Dots -->
+        <div style="display: flex; justify-content: center; gap: 8px; margin-top: 20px;">
+          <span class="ob-dot active" style="width: 8px; height: 8px; border-radius: 50%; background: var(--accent-primary); opacity: 0.5;"></span>
+          <span class="ob-dot" style="width: 8px; height: 8px; border-radius: 50%; background: var(--border-color);"></span>
+          <span class="ob-dot" style="width: 8px; height: 8px; border-radius: 50%; background: var(--border-color);"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOME / CHECKIN SCREEN -->
+    <div id="screen-home" class="screen">
+      <header>
+        <h1><span>⚡</span> StudyMind</h1>
+      </header>
+
+      <div id="checkin-container">
+        <h2 style="font-size: 1.3rem; margin-bottom: 8px; font-weight: 700;">Today's Check-in</h2>
+        <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 20px;">How is your prep going today?</p>
+
+        <form id="checkin-form">
+          <!-- Mood -->
+          <div class="slider-container card">
+            <div class="slider-header">
+              <label style="margin-bottom:0;">Mood Score</label>
+              <div id="emoji-display" class="emoji-display">😐</div>
+            </div>
+            <input type="range" id="mood-slider" min="1" max="10" value="5">
+            <div style="display:flex; justify-content:space-between; color:var(--text-secondary); font-size:0.75rem; margin-top:6px;">
+              <span>Overwhelmed</span>
+              <span>Okay</span>
+              <span>Fully Confident</span>
+            </div>
+          </div>
+
+          <!-- Energy -->
+          <div class="card">
+            <label>Energy Level</label>
+            <div id="energy-group" class="btn-group">
+              <button type="button" class="btn-choice" data-value="Drained">😰 Drained</button>
+              <button type="button" class="btn-choice" data-value="Low">😟 Low</button>
+              <button type="button" class="btn-choice" data-value="Okay">😐 Okay</button>
+              <button type="button" class="btn-choice" data-value="High">🙂 High</button>
+              <button type="button" class="btn-choice" data-value="Charged">🔥 Charged</button>
+            </div>
+          </div>
+
+          <!-- Focus -->
+          <div class="card">
+            <label>Focus Quality</label>
+            <div id="focus-group" class="btn-group">
+              <button type="button" class="btn-choice" data-value="Couldn't focus">Couldn't focus</button>
+              <button type="button" class="btn-choice" data-value="Scattered">Scattered</button>
+              <button type="button" class="btn-choice" data-value="Moderate">Moderate</button>
+              <button type="button" class="btn-choice" data-value="Sharp">Sharp</button>
+              <button type="button" class="btn-choice" data-value="In the zone">In the zone</button>
+            </div>
+          </div>
+
+          <!-- Journal -->
+          <div class="card">
+            <label for="journal-input">Open Journal</label>
+            <textarea id="journal-input" rows="4" placeholder="What happened today? What felt hard? What went well? Write freely..." maxlength="1200"></textarea>
+            <div id="char-counter" style="text-align: right; font-size: 0.75rem; color: var(--text-secondary);">0 / 1200</div>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Submit Check-in</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- CHAT SCREEN -->
+    <div id="screen-chat" class="screen">
+      <header>
+        <h1><span>💬</span> Mentor Response</h1>
+      </header>
+
+      <div id="chat-response-container">
+        <!-- AI streamed contents goes here -->
+      </div>
+
+      <!-- Follow up interaction UI -->
+      <div id="chat-interactive-interface" style="display: none; margin-top: 10px;">
+        <div id="chat-history" class="chat-container"></div>
+        <div class="chat-input-bar">
+          <input type="text" id="chat-user-message" placeholder="Ask your study senior a follow-up..." style="flex:1;">
+          <button id="chat-send-btn" class="chat-send-btn">
+            <!-- Send Icon -->
+            <svg viewBox="0 0 24 24"><path d="M2,21L23,12L2,3V10L17,12L2,14V21Z"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MOOD & PERFORMANCE DASHBOARD -->
+    <div id="screen-dashboard" class="screen">
+      <header>
+        <h1><span>📊</span> Dashboard</h1>
+      </header>
+
+      <!-- Stats Row -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:20px;">
+        <div class="card" style="padding:15px; margin-bottom:0; text-align:center;">
+          <div style="font-size:0.75rem; color:var(--text-secondary); margin-bottom:5px;">Streak</div>
+          <div id="stat-streak" style="font-size:1.3rem; font-weight:700; color:var(--accent-primary);">0 Days</div>
+        </div>
+        <div class="card" style="padding:15px; margin-bottom:0; text-align:center;">
+          <div style="font-size:0.75rem; color:var(--text-secondary); margin-bottom:5px;">Best Day This Month</div>
+          <div id="stat-best-day" style="font-size:0.9rem; font-weight:600; color:var(--success); margin-top:6px;">No logs</div>
+        </div>
+      </div>
+
+      <div class="card" style="padding:15px; margin-bottom:20px; text-align:center;">
+        <div style="font-size:0.75rem; color:var(--text-secondary); margin-bottom:5px;">Mood Trend</div>
+        <div id="stat-mood-diff" style="font-size:0.95rem; font-weight:600;">No calculations yet</div>
+      </div>
+
+      <!-- Weekly Summary Card -->
+      <div class="card" style="background: rgba(99, 102, 241, 0.05); border: 1px dashed var(--accent-primary);">
+        <h3 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; display:flex; align-items:center; gap:8px;">
+          <span>🧠</span> Weekly AI Insight
+        </h3>
+        <div id="weekly-insight-content">
+          <!-- Streamed summary pattern -->
+        </div>
+      </div>
+
+      <!-- Charts Area -->
+      <div id="charts-empty-state" class="card" style="text-align: center; color: var(--text-secondary); padding: 40px 20px;">
+        <p>No check-in logs found. Submit daily logs to populate trends charts.</p>
+      </div>
+
+      <div id="charts-container" style="display: none;">
+        <!-- Chart 1: Line Mood Focus -->
+        <div class="card">
+          <h3 style="font-size: 1rem; margin-bottom: 15px; font-weight: 600;">Daily Mood & Focus Trend</h3>
+          <canvas id="chart-mood-focus" height="200"></canvas>
+        </div>
+
+        <!-- Chart 2: Energy Pattern -->
+        <div class="card">
+          <h3 style="font-size: 1rem; margin-bottom: 15px; font-weight: 600;">7-Day Energy Pattern</h3>
+          <canvas id="chart-energy" height="150"></canvas>
+        </div>
+
+        <!-- Chart 3: Stress Triggers -->
+        <div class="card">
+          <h3 style="font-size: 1rem; margin-bottom: 15px; font-weight: 600;">Stress Trigger Frequency (30 Days)</h3>
+          <canvas id="chart-stress-triggers" height="150"></canvas>
+        </div>
+
+        <!-- Chart 4: Positive Factors -->
+        <div class="card">
+          <h3 style="font-size: 1rem; margin-bottom: 15px; font-weight: 600;">Positive Factor Frequency (30 Days)</h3>
+          <canvas id="chart-positives" height="150"></canvas>
+        </div>
+      </div>
+
+      <!-- 30-Day Log Calendar -->
+      <div class="card">
+        <h3 style="font-size: 1rem; margin-bottom: 15px; font-weight: 600;">30-Day Tracker Grid</h3>
+        <div id="calendar-grid" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; justify-items: center; padding: 10px 0;">
+          <!-- Dots mapped color code -->
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-top:15px; font-size:0.75rem; color:var(--text-secondary);">
+          <span style="display:flex; align-items:center; gap:4px;"><span style="width:8px; height:8px; border-radius:50%; background:#EF4444;"></span> Bad</span>
+          <span style="display:flex; align-items:center; gap:4px;"><span style="width:8px; height:8px; border-radius:50%; background:#EAB308;"></span> Okay</span>
+          <span style="display:flex; align-items:center; gap:4px;"><span style="width:8px; height:8px; border-radius:50%; background:#6366F1;"></span> Great</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIBRARY SCREEN -->
+    <div id="screen-library" class="screen">
+      <header>
+        <h1><span>📚</span> Resource Library</h1>
+      </header>
+
+      <div class="card" style="padding: 15px; margin-bottom: 20px; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h3 id="library-exam-title" style="font-size: 1.1rem; font-weight: 700; color:var(--text-primary);">Exam Specific Resources</h3>
+          <p style="color:var(--text-secondary); font-size:0.75rem; margin-top:2px;">Filter applied automatically from your target profile</p>
+        </div>
+      </div>
+
+      <div id="library-accordion-container">
+        <!-- Dynamic accordions based on student profile exam selection -->
+      </div>
+
+      <!-- API Key Manager Card -->
+      <div class="card" style="margin-bottom: 20px;">
+        <h3 style="font-size: 1.1rem; font-weight: 700; color:var(--text-primary); margin-bottom: 8px;">API Key Management</h3>
+        <p style="color:var(--text-secondary); font-size:0.8rem; margin-bottom:15px;">Update your Mistral API authorization key here</p>
+        <div style="display:flex; gap:10px; align-items:center;">
+          <input type="password" id="settings-api-key" placeholder="Enter Mistral API Key..." style="margin-bottom:0; flex:1;">
+          <button id="btn-save-api-key" class="btn btn-primary" style="width:auto; padding:10px 20px; font-size:0.9rem;">Save</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 30px; text-align: center; border-color: rgba(239, 68, 68, 0.3);">
+        <h4 style="color:var(--error); font-size:0.95rem; margin-bottom:8px; font-weight: 600;">Reset Application</h4>
+        <p style="color:var(--text-secondary); font-size:0.8rem; margin-bottom:15px;">Clear all data logs, settings, and start fresh</p>
+        <button id="btn-reset-app" class="btn btn-secondary" style="border:1px solid var(--error); color:var(--error); background:transparent; font-size:0.85rem;">Reset All Data</button>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <nav id="main-nav" class="bottom-nav">
+      <button class="nav-item active" data-target="screen-home">
+        <!-- SVG Home -->
+        <svg viewBox="0 0 24 24"><path d="M10,20V14H14V20H19V12H22L12,3L2,12H5V20H10Z"/></svg>
+        Home
+      </button>
+      <button class="nav-item" data-target="screen-chat">
+        <!-- SVG Chat -->
+        <svg viewBox="0 0 24 24"><path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17Z"/></svg>
+        Companion
+      </button>
+      <button class="nav-item" data-target="screen-dashboard">
+        <!-- SVG Analytics -->
+        <svg viewBox="0 0 24 24"><path d="M19,3H5C3.89,3 3,3.9 3,5V19C3,20.1 3.89,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.9 20.1,3 19,3M9,17H7V10H9V17M13,17H11V7H13V17M17,17H15V12H17V17Z"/></svg>
+        Dashboard
+      </button>
+      <button class="nav-item" data-target="screen-library">
+        <!-- SVG Library -->
+        <svg viewBox="0 0 24 24"><path d="M19,2H14A2,2 0 0,0 12,4V18A2,2 0 0,0 14,20H19A2,2 0 0,0 21,18V4A2,2 0 0,0 19,2M19,18H14V4H19V18M10,4H5A2,2 0 0,0 3,6V20A2,2 0 0,0 5,22H10A2,2 0 0,0 12,20V6A2,2 0 0,0 10,4M10,20H5V6H10V20Z"/></svg>
+        Library
+      </button>
+    </nav>
+
+    <!-- CUSTOM APP MODAL -->
+    <div id="custom-modal" class="modal-overlay">
+      <div class="modal-content">
+        <button id="modal-close-btn" class="modal-close">&times;</button>
+        <div id="modal-body" style="color: var(--text-secondary); line-height:1.6;">
+          <!-- Content injected dynamically -->
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Load App scripts -->
+  <script src="js/bundle.js"></script>
+</body>
+</html>
